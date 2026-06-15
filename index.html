@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Forecast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+ <link href="external_CSS/theme.css" rel="stylesheet">
+  <link href="external_CSS/home.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="theme-toggle-wrap">
+  <label class="theme-toggle" title="Toggle theme">
+    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+    <span class="toggle-track">
+      <span class="toggle-thumb">
+        <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.08l.7-.7M18.36 5.64l.7-.7"/></svg>
+        <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </span>
+    </span>
+  </label>
+</div>
+<main class="page">
+
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.08l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>
+    </div>
+    <span class="brand-name">Weather<span>Forcast</span></span>
+  </div>
+
+  <h1 class="hero-heading">What's the weather<br/>where you are?</h1>
+  <p class="hero-sub">Real-time forecasts, hourly breakdowns,<br/>and 7-day outlooks for any city in the world.</p>
+
+  <div class="datetime">
+    <span id="live-day">Wednesday</span>
+    <div class="datetime-dot"></div>
+    <span id="live-date">June 10, 2026</span>
+    <div class="datetime-dot"></div>
+    <span id="live-time">06:18 PM</span>
+  </div>
+
+  <div class="search-card">
+    <form class="search-row" id="searchForm" onsubmit="event.preventDefault(); goSearch();">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cityInput" placeholder="Search any city…" autocomplete="off" />
+      </div>
+      <button type="submit" class="search-btn" id="searchBtn">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Search
+      </button>
+    </form>
+    <p class="error-msg" id="errorMsg">⚠ Please enter a city name to continue.</p>
+
+    <div class="quick-section">
+      <p class="quick-label">Popular cities</p>
+      <div class="quick-chips">
+        <button type="button" class="chip" onclick="quickSearch('Kathmandu')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          Kathmandu
+        </button>
+        <button type="button" class="chip" onclick="quickSearch('London')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          London
+        </button>
+        <button type="button" class="chip" onclick="quickSearch('New York')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          New York
+        </button>
+        <button type="button" class="chip" onclick="quickSearch('Tokyo')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          Tokyo
+        </button>
+        <button type="button" class="chip" onclick="quickSearch('Dubai')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+          Dubai
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+<script src="external_JS/theme.js"></script>
+<script src="external_JS/home.js"></script>
+</body>
+</html>

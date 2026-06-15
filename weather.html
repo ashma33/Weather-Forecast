@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Advanced Weather Forecast App</title>
+        <link rel="stylesheet" href="external_CSS/theme.css">
+        <link rel="stylesheet" href="external_CSS/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    </head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-container">
+        <div class="animated-bg"></div>
+        <div class="rain-container" id="rainContainer"></div>
+        <div class="snow-container" id="snowContainer"></div>
+        <div class="sun-container" id="sunContainer">
+            <div class="sun-glow"></div>
+            <div class="sun-rays"></div>
+        </div>
+        <div class="mist-container" id="mistContainer">
+            <div class="mist-layer"></div>
+            <div class="mist-layer"></div>
+            <div class="mist-layer"></div>
+        </div>
+        <div class="lightning-container" id="lightningContainer"></div>
+        <div class="cloud-container">
+            <div class="cloud cloud-1"></div>
+            <div class="cloud cloud-2"></div>
+            <div class="cloud cloud-3"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header -->
+        <div class="navbar-wrapper">
+            <div class="brand-container">
+                <a href="index.html" class="home-link">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.08l.7-.7M18.36 5.64l.7-.7"/><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <span class="brand-text">Weather<span>Forcast</span></span>
+                </a>
+            </div>
+            <div class="nav-search-bar">
+                <button id="backBtn" title="Back to Home" onclick="window.location.href='index.html'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                    </svg>
+                </button>
+                <input type="text" id="searchInput" placeholder="Search city...">
+                <button id="searchBtn" title="Search Location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                </button>
+                <button id="currentLocationBtn" title="Use Current Location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                    </svg>
+                </button>
+            </div>
+        
+            <div class="nav-actions">
+                <button id="tempToggleBtn" class="unit-pill">
+                    <span id="tempUnitDisplay">°C</span>
+                </button>
+            
+                <label class="theme-toggle" title="Toggle theme">
+                  <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                  <span class="toggle-track">
+                    <span class="toggle-thumb">
+                      <svg class="icon sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v1m0 16v1M4.22 4.22l.7.7m12.16 12.16.7.7M3 12h1m16 0h1M4.92 19.08l.7-.7M18.36 5.64l.7-.7"/></svg>
+                      <svg class="icon moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </span>
+                  </span>
+                </label>
+            </div>
+        </div>
+        
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- Left Section: Weather Info & Forecast -->
+            <div class="left-section">
+                <!-- Current Weather -->
+                <div class="weather-card current-weather">
+                    <div class="weather-header">
+                        <div class="location-info">
+                            <h2 id="cityName">---</h2>
+                            <p id="weatherDate">Loading...</p>
+                        </div>
+                        <div class="weather-temp">
+                            <span id="temperature" class="temp">--</span>
+                            <span class="unit" id="displayUnit">°C</span>
+                        </div>
+                    </div>
+
+                    <div class="weather-body">
+                        <div class="weather-icon-container">
+                            <img id="weatherIcon" src="" alt="Weather" class="weather-icon-large">
+                        </div>
+                        <div class="weather-description">
+                            <p id="weatherDescription" class="description">---</p>
+                            <p id="feelsLike" class="feels-like">Feels like ---</p>
+                        </div>
+                    </div>
+
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-droplets"></i>
+                            <div>
+                                <span>Humidity</span>
+                                <p id="humidity">--%</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <div>
+                                <span>Wind Speed</span>
+                                <p id="windSpeed">-- m/s</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-eye"></i>
+                            <div>
+                                <span>Visibility</span>
+                                <p id="visibility">-- km</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-compress"></i>
+                            <div>
+                                <span>Pressure</span>
+                                <p id="pressure">-- mb</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lifestyle Tips -->
+                <div class="lifestyle-tips-card">
+                    <div class="lifestyle-header">
+                        <h3><i class="fas fa-heart"></i> Lifestyle Tips</h3>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="lifestyle-tips-grid" id="lifestyleTips">
+                        <div class="lifestyle-loading">Loading tips...</div>
+                    </div>
+                </div>
+
+                <!-- Hourly Forecast -->
+                <div class="forecast-card">
+                    <h3><i class="fas fa-clock"></i> Hourly Forecast</h3>
+                    <div class="hourly-forecast" id="hourlyForecast">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast -->
+                <div class="forecast-card">
+                    <h3><i class="fas fa-calendar"></i> 5-Day Forecast</h3>
+                    <div class="daily-forecast" id="dailyForecast">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section: Map & Additional Info -->
+            <div class="right-section">
+                <!-- Map Container -->
+                <div class="map-card">
+                    <h3><i class="fas fa-map-location-dot"></i> Live Location Map</h3>
+                    <div id="map" class="map-container"></div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Additional Info</h3>
+                    <div class="info-item">
+                        <span>Wind Gusts</span>
+                        <p id="windGustsDisplay">--</p>
+                    </div>
+                        <div class="info-item">
+                            <span>Precipitation</span>
+                            <p id="precipitation">--%</p>
+                        </div>
+                        <div class="info-item">
+                            <span>Cloud Cover</span>
+                            <p id="cloudCover">--%</p>
+                        </div>
+                        <div class="info-item">
+                            <span>Dew Point</span>
+                            <p id="dewPoint">--<span id="dewPointUnit">°C</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Alerts -->
+                <div id="alertsContainer" class="alert-card" style="display: none;">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Weather Alerts</h3>
+                    <div id="alertsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Toast -->
+    <div id="errorToast" class="toast"></div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading-indicator">
+        <div class="spinner"></div>
+        <p>Loading weather data...</p>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="external_JS/theme.js"></script>
+    <script src="external_JS/script.js"></script>
+</body>
+</html>
+</body>
+</html>
